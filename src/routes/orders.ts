@@ -16,15 +16,15 @@ export async function orderRoutes(fastify: FastifyInstance) {
     fastify.get<{ Querystring: ExecuteOrderQuerystring }>(
         '/api/orders/execute',
         { websocket: true },
-        async (connection, req) => {
+        async (socket: any, req) => {
             const { tokenIn, tokenOut, amountIn, slippage } = req.query;
 
             // Validate input
             if (!tokenIn || !tokenOut || !amountIn || Number(amountIn) <= 0) {
-                connection.socket.send(JSON.stringify({
+                socket.send(JSON.stringify({
                     error: 'Invalid order parameters. Use: ?tokenIn=SOL&tokenOut=USDC&amountIn=1.5&slippage=0.01'
                 }));
-                connection.socket.close();
+                socket.close();
                 return;
             }
 
@@ -41,10 +41,10 @@ export async function orderRoutes(fastify: FastifyInstance) {
             };
 
             // Register WebSocket connection
-            registerConnection(order.id, connection);
+            registerConnection(order.id, socket);
 
             // Send initial response
-            connection.socket.send(JSON.stringify({
+            socket.send(JSON.stringify({
                 orderId: order.id,
                 status: 'pending',
                 timestamp: new Date().toISOString()
@@ -54,7 +54,7 @@ export async function orderRoutes(fastify: FastifyInstance) {
             await enqueueOrder(order);
 
             // Handle disconnection
-            connection.socket.on('close', () => {
+            socket.on('close', () => {
                 unregisterConnection(order.id);
             });
         }

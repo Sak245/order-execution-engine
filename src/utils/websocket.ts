@@ -16,16 +16,16 @@ export function unregisterConnection(orderId: string) {
 
 export function sendMessage(orderId: string, message: WebSocketMessage) {
     const socket = connections.get(orderId);
-    if (socket && socket.socket.readyState === socket.socket.OPEN) {
-        socket.socket.send(JSON.stringify(message));
+    if (socket && socket.readyState === socket.OPEN) {
+        socket.send(JSON.stringify(message));
         console.log(`[WebSocket] Sent to ${orderId}:`, message.status);
     }
 }
 
 export function broadcastMessage(message: WebSocketMessage) {
     connections.forEach((socket, orderId) => {
-        if (socket.socket.readyState === socket.socket.OPEN) {
-            socket.socket.send(JSON.stringify(message));
+        if (socket.readyState === socket.OPEN) {
+            socket.send(JSON.stringify(message));
         }
     });
 }
