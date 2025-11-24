@@ -4,25 +4,25 @@ import { Order } from '../types/order';
 import { enqueueOrder } from '../services/orderQueue';
 import { registerConnection, unregisterConnection } from '../utils/websocket';
 
-interface ExecuteOrderBody {
+interface ExecuteOrderQuerystring {
     tokenIn: string;
     tokenOut: string;
-    amountIn: number;
-    slippage: number;
+    amountIn: string;
+    slippage?: string;
 }
 
 export async function orderRoutes(fastify: FastifyInstance) {
-    // POST /api/orders/execute - Submit order and upgrade to WebSocket
-    fastify.post<{ Body: ExecuteOrderBody }>(
+    // GET /api/orders/execute - Submit order and upgrade to WebSocket
+    fastify.get<{ Querystring: ExecuteOrderQuerystring }>(
         '/api/orders/execute',
         { websocket: true },
         async (connection, req) => {
-            const { tokenIn, tokenOut, amountIn, slippage } = req.body;
+            const { tokenIn, tokenOut, amountIn, slippage } = req.query;
 
             // Validate input
-            if (!tokenIn || !tokenOut || !amountIn || amountIn <= 0) {
+            if (!tokenIn || !tokenOut || !amountIn || Number(amountIn) <= 0) {
                 connection.socket.send(JSON.stringify({
-                    error: 'Invalid order parameters'
+                    error: 'Invalid order parameters. Use: ?tokenIn=SOL&tokenOut=USDC&amountIn=1.5&slippage=0.01'
                 }));
                 connection.socket.close();
                 return;
@@ -33,8 +33,8 @@ export async function orderRoutes(fastify: FastifyInstance) {
                 id: uuidv4(),
                 tokenIn,
                 tokenOut,
-                amountIn,
-                slippage: slippage || 0.01,
+                amountIn: Number(amountIn),
+                slippage: Number(slippage) || 0.01,
                 status: 'pending',
                 createdAt: new Date(),
                 updatedAt: new Date()
