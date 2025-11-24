@@ -5,7 +5,6 @@ A high-performance order execution engine with DEX routing (Raydium + Meteora) a
 ## 🚀 Live Demo
 
 - **API Endpoint**: [Coming Soon]
-- **GitHub**: https://github.com/[your-username]/order-execution-engine
 
 ## 📋 Table of Contents
 
