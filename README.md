@@ -220,15 +220,3 @@ REDIS_HOST=localhost
 REDIS_PORT=6379
 DATABASE_URL=postgresql://user:password@localhost:5432/orders_db
 ```
-
-## 📝 License
-
-ISC
-
-## 👤 Author
-
-[Your Name]
-
----
-
-Built for Eterna Labs Backend Assessment
