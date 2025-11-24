@@ -25,13 +25,13 @@ NODE_ENV=development
 PORT=3000
 
 # Upstash Redis
-REDIS_HOST=worthy-roughy-35448.upstash.io
+REDIS_HOST=your-redis-host.upstash.io
 REDIS_PORT=6379
-REDIS_PASSWORD=AYp4AAIncDI0Yzc4NWZiMjQ5NGY0ODczOTRiYTk5ZDRhYTU1MjljMHAyMzU0NDg
+REDIS_PASSWORD=your-redis-password-here
 REDIS_TLS=true
 
 # Neon PostgreSQL
-DATABASE_URL=postgresql://[your-connection-string]
+DATABASE_URL=postgresql://your-neon-connection-string-here
 ```
 
 ### 3. Build & Run
